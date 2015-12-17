@@ -28,4 +28,11 @@ use Mix.Config
 # here (which is why it is important to import them last).
 #
 #     import_config "#{Mix.env}.exs"
+
+config :tlrss, TLRSS.Repo,
+adapter: Ecto.Adapters.Postgres,
+database: "tlrss_dev",
+username: "postgres",
+password: "postgres"
+
 import_config "rss_creds.exs"
