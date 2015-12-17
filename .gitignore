@@ -1,0 +1,6 @@
+/_build
+/cover
+/deps
+/config/rss_creds.exs
+erl_crash.dump
+*.ez
