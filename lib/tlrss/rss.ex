@@ -15,7 +15,7 @@ defmodule TLRSS.RSS do
     feed.entries
   end
 
-  def add_entry(e) do
+  defp add_entry(e) do
     changeset = TLRSS.Item.changeset %TLRSS.Item{}, %{tlid: e.id,
                                                       name: e.title,
                                                       link: e.link}
