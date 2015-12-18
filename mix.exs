@@ -14,7 +14,8 @@ defmodule TLRSS.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger, :httpoison, :postgrex, :ecto]]
+    [mod: {TLRSS, []},
+     applications: [:logger, :httpoison, :ecto, :postgrex]]
   end
 
   # Dependencies can be Hex packages:

@@ -1,15 +1,21 @@
 defmodule TLRSS do
-  def rss_data do
-    rss_url = Application.get_env(:tlrss, :rss_url)
-    {:ok, %HTTPoison.Response{body: body}} = HTTPoison.get(rss_url)
-    {:ok, feed, _} = FeederEx.parse body 
-    feed
-  end
+  use Application
 
-  def rss_entries do
-    rss_url = Application.get_env(:tlrss, :rss_url)
-    {:ok, %HTTPoison.Response{body: body}} = HTTPoison.get(rss_url)
-    {:ok, feed, _} = FeederEx.parse body 
-    feed.entries
+  # See http://elixir-lang.org/docs/stable/elixir/Application.html
+  # for more information on OTP Applications
+  def start(_type, _args) do
+    import Supervisor.Spec, warn: false
+
+    children = [
+      # Start the Ecto repository
+      worker(TLRSS.Repo, []),
+      # Here you could define other workers and supervisors as children
+      # worker(Wedding.Worker, [arg1, arg2, arg3]),
+    ]
+
+    # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
+    # for other strategies and supported options
+    opts = [strategy: :one_for_one, name: TLRSS.Supervisor]
+    Supervisor.start_link(children, opts)
   end
 end
