@@ -1,4 +1,4 @@
-defmodule TLRSS.Repo do
+defmodule TLRSS.ItemBucket do
   use GenServer
 
   def start_link(opts \\ []) do
