@@ -1,7 +1,7 @@
 defmodule TLRSS.ItemBucket do
   use GenServer
 
-  def start_link(init_items, opts \\ []) do
+  def start_link(init_items \\ [], opts \\ []) do
     GenServer.start_link(__MODULE__, init_items, opts)
   end
 
