@@ -9,6 +9,10 @@ defmodule TLRSS.ItemBucket do
     GenServer.call(pid, {:add_item, item})
   end
 
+  def get_items(pid) do
+    GenServer.call(pid, :get_items)
+  end
+
   def add_items(pid, items) do
     GenServer.call(pid, {:add_items, items})
   end
@@ -27,6 +31,10 @@ defmodule TLRSS.ItemBucket do
     else
       {:reply, {:ok, item}, [item|items]}
     end
+  end
+
+  def handle_call(:get_items, _from, items) do
+    {:reply, items, items}
   end
 
   def handle_call({:add_items, new_items}, _from, items) do
