@@ -12,6 +12,14 @@ defmodule TLRSSTest do
     assert is == items
   end
 
+  test "seen_item? after init" do
+    item = %TLRSS.Item{tlid: "tlid", name: "name", link: "link"}
+    {:ok, pid} = TLRSS.ItemBucket.start_link([item])
+
+    {:seen, i} = TLRSS.ItemBucket.seen_item? pid, item
+    assert i == item
+  end
+
   test "seen_item? after adding item" do
     {:ok, pid} = TLRSS.ItemBucket.start_link([])
     item = %TLRSS.Item{tlid: "tlid", name: "name", link: "link"}
