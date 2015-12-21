@@ -3,7 +3,7 @@ defmodule TLRSSTest do
   doctest TLRSS
 
   test "add items" do
-    {:ok, pid} = TLRSS.ItemBucket.start_link([])
+    {:ok, pid} = TLRSS.ItemBucket.start_link
     items = [42,1337,13,5,23]
 
     TLRSS.ItemBucket.add_items pid, items
@@ -21,7 +21,7 @@ defmodule TLRSSTest do
   end
 
   test "seen_item? after adding item" do
-    {:ok, pid} = TLRSS.ItemBucket.start_link([])
+    {:ok, pid} = TLRSS.ItemBucket.start_link
     item = %TLRSS.Item{tlid: "tlid", name: "name", link: "link"}
 
     TLRSS.ItemBucket.add_item pid, item
