@@ -32,6 +32,6 @@ defmodule TLRSSTest do
     TLRSS.ItemBucket.remove_item pid, 4
 
     {:items, items} = TLRSS.ItemBucket.get_items pid
-    assert is = [1,3,5]
+    assert items == [1,3,5]
   end
 end
