@@ -34,7 +34,7 @@ defmodule TLRSS.ItemBucket do
   end
 
   def handle_call(:get_items, _from, items) do
-    {:reply, items, items}
+    {:reply, {:items, items}, items}
   end
 
   def handle_call({:add_items, new_items}, _from, items) do
