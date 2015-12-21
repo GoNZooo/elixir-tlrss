@@ -2,11 +2,7 @@ defmodule TLRSSTest do
   use ExUnit.Case
   doctest TLRSS
 
-  test "the truth" do
-    assert 1 + 1 == 2
-  end
-
-  test "seen_item? is true after adding item" do
+  test "seen_item? after adding item" do
     {:ok, pid} = TLRSS.ItemBucket.start_link([])
     item = %TLRSS.Item{tlid: "tlid", name: "name", link: "link"}
 
@@ -15,7 +11,7 @@ defmodule TLRSSTest do
     assert i == item
   end
 
-  test "add items, items are the same after fetch" do
+  test "add items" do
     {:ok, pid} = TLRSS.ItemBucket.start_link([])
     items = [42,1337,13,5,23]
 
@@ -25,7 +21,7 @@ defmodule TLRSSTest do
     assert is == items
   end
 
-  test "add items, remove item and verify correctness" do
+  test "add items, remove items" do
     {:ok, pid} = TLRSS.ItemBucket.start_link([1,2,3,4,5])
 
     TLRSS.ItemBucket.remove_item pid, 2
