@@ -25,6 +25,10 @@ defmodule TLRSS.ItemBucket do
     GenServer.cast(pid, {:remove_items, items})
   end
 
+  def remove_matching(pid, predicate) do
+    GenServer.cast(pid, {:remove_matching, predicate})
+  end
+
   def seen_item?(pid, item) do
     GenServer.call(pid, {:seen_item?, item})
   end
@@ -69,6 +73,11 @@ defmodule TLRSS.ItemBucket do
   end
 
   def handle_cast({:remove_items, items_to_delete}, items) do
+    {:noreply, Enum.filter(items, fn i -> not i in items_to_delete end)}
+  end
+
+  def handle_cast({:remove_matching, predicate}, items) do
+    items_to_delete = Enum.filter(items, predicate)
     {:noreply, Enum.filter(items, fn i -> not i in items_to_delete end)}
   end
 end

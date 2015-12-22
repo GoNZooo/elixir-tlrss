@@ -47,4 +47,13 @@ defmodule TLRSSTest do
     {:items, items} = TLRSS.ItemBucket.get_items pid
     assert items == [1,3,5]
   end
+
+  test "remove matching" do
+    {:ok, pid} = TLRSS.ItemBucket.start_link([1,2,3,4,5])
+
+    TLRSS.ItemBucket.remove_matching(pid, fn n -> rem(n, 2) == 0 end)
+
+    {:items, items} = TLRSS.ItemBucket.get_items pid
+    assert items == [1,3,5]
+  end
 end
