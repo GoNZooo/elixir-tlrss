@@ -29,11 +29,20 @@ defmodule TLRSSTest do
     assert i == item
   end
 
-  test "remove items" do
+  test "remove item" do
     {:ok, pid} = TLRSS.ItemBucket.start_link([1,2,3,4,5])
 
     TLRSS.ItemBucket.remove_item pid, 2
     TLRSS.ItemBucket.remove_item pid, 4
+
+    {:items, items} = TLRSS.ItemBucket.get_items pid
+    assert items == [1,3,5]
+  end
+
+  test "remove items" do
+    {:ok, pid} = TLRSS.ItemBucket.start_link([1,2,3,4,5])
+
+    TLRSS.ItemBucket.remove_items(pid, [2,4])
 
     {:items, items} = TLRSS.ItemBucket.get_items pid
     assert items == [1,3,5]
