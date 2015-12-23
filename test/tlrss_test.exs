@@ -56,4 +56,14 @@ defmodule TLRSSTest do
     {:items, items} = TLRSS.ItemBucket.get_items pid
     assert items == [1,3,5]
   end
+
+  test "add items, some already present" do
+    {:ok, pid} = TLRSS.ItemBucket.start_link([1,2,3,4,5])
+
+    {{:ok, new_items},
+     {:seen, seen_items}} = TLRSS.ItemBucket.add_items pid, [2,3, 42, 1337]
+
+    assert new_items == [42, 1337]
+    assert seen_items == [2,3]
+  end
 end
