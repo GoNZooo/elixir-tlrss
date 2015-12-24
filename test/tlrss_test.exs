@@ -6,7 +6,7 @@ defmodule TLRSSTest do
 
   test "add items" do
     {:ok, pid} = ItemBucket.start_link
-    items = [42,1337,13,5,23]
+    items = [42, 1337, 13, 5, 23]
 
     ItemBucket.add_items pid, items
     {:items, is} = ItemBucket.get_items pid
@@ -38,40 +38,40 @@ defmodule TLRSSTest do
     ItemBucket.remove_item pid, 4
 
     {:items, items} = ItemBucket.get_items pid
-    assert items == [1,3,5]
+    assert items == [1, 3, 5]
   end
 
   test "remove items" do
-    {:ok, pid} = ItemBucket.start_link([1,2,3,4,5])
+    {:ok, pid} = ItemBucket.start_link([1, 2, 3, 4, 5])
 
-    ItemBucket.remove_items(pid, [2,4])
+    ItemBucket.remove_items(pid, [2, 4])
 
     {:items, items} = ItemBucket.get_items pid
-    assert items == [1,3,5]
+    assert items == [1, 3, 5]
   end
 
   test "remove matching" do
-    {:ok, pid} = ItemBucket.start_link([1,2,3,4,5])
+    {:ok, pid} = ItemBucket.start_link([1, 2, 3, 4, 5])
 
     ItemBucket.remove_matching(pid, fn n -> rem(n, 2) == 0 end)
 
     {:items, items} = ItemBucket.get_items pid
-    assert items == [1,3,5]
+    assert items == [1, 3, 5]
   end
 
   test "add items, some already present" do
-    {:ok, pid} = ItemBucket.start_link([1,2,3,4,5])
+    {:ok, pid} = ItemBucket.start_link([1, 2, 3, 4, 5])
     is = [2,3, 42, 1337]
 
     {{:ok, new_items}, {:seen, seen_items}} = ItemBucket.add_items pid, is
 
     assert new_items == [42, 1337]
-    assert seen_items == [2,3]
+    assert seen_items == [2, 3]
   end
 
   test "add items, all already present" do
-    {:ok, pid} = ItemBucket.start_link([1,2,3,4,5])
-    is = [2,3, 1, 4, 5]
+    {:ok, pid} = ItemBucket.start_link([1, 2, 3, 4, 5])
+    is = [2, 3, 1, 4, 5]
 
     {{:ok, new_items}, {:seen, seen_items}} = ItemBucket.add_items pid, is
 
