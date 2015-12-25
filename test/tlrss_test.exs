@@ -14,33 +14,6 @@ defmodule TLRSSTest do
     assert is == items
   end
 
-  test "seen_item? after init" do
-    item = %TLRSS.Item{tlid: "tlid", name: "name", link: "link"}
-    {:ok, pid} = ItemBucket.start_link [item]
-
-    {:seen, i} = ItemBucket.seen_item? pid, item
-    assert i == item
-  end
-
-  test "seen_item? after adding item" do
-    {:ok, pid} = ItemBucket.start_link
-    item = %TLRSS.Item{tlid: "tlid", name: "name", link: "link"}
-
-    ItemBucket.add_item pid, item
-    {:seen, i} = ItemBucket.seen_item? pid, item
-    assert i == item
-  end
-
-  test "remove item" do
-    {:ok, pid} = ItemBucket.start_link [1,2,3,4,5]
-
-    ItemBucket.remove_item pid, 2
-    ItemBucket.remove_item pid, 4
-
-    {:items, items} = ItemBucket.get_items pid
-    assert items == [1, 3, 5]
-  end
-
   test "remove items" do
     {:ok, pid} = ItemBucket.start_link [1, 2, 3, 4, 5]
 
