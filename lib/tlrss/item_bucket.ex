@@ -9,16 +9,8 @@ defmodule TLRSS.ItemBucket do
     GenServer.call(pid, :get_items)
   end
 
-  def add_item(pid, item) do
-    GenServer.call(pid, {:add_item, item})
-  end
-
   def add_items(pid, items) do
     GenServer.call(pid, {:add_items, items})
-  end
-
-  def remove_item(pid, item) do
-    GenServer.cast(pid, {:remove_item, item})
   end
 
   def remove_items(pid, items) do
@@ -27,10 +19,6 @@ defmodule TLRSS.ItemBucket do
 
   def remove_matching(pid, predicate) do
     GenServer.cast(pid, {:remove_matching, predicate})
-  end
-
-  def seen_item?(pid, item) do
-    GenServer.call(pid, {:seen_item?, item})
   end
 
   defp item_seen?(items, item) do
