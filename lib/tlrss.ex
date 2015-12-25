@@ -1,7 +1,7 @@
 defmodule TLRSS do
   use Application
 
-  @item_bucket TLRSS.ItemBucket
+  @item_bucket ItemBucket
 
   # See http://elixir-lang.org/docs/stable/elixir/Application.html
   # for more information on OTP Applications
@@ -10,7 +10,7 @@ defmodule TLRSS do
 
     children = [
       # Start the Ecto repository
-      worker(TLRSS.ItemBucket, []),
+      worker(TLRSS.ItemBucket, [[], [name: @item_bucket]]),
       # Here you could define other workers and supervisors as children
       # worker(Wedding.Worker, [arg1, arg2, arg3]),
     ]
