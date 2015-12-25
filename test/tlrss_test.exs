@@ -16,7 +16,7 @@ defmodule TLRSSTest do
 
   test "seen_item? after init" do
     item = %TLRSS.Item{tlid: "tlid", name: "name", link: "link"}
-    {:ok, pid} = ItemBucket.start_link([item])
+    {:ok, pid} = ItemBucket.start_link [item]
 
     {:seen, i} = ItemBucket.seen_item? pid, item
     assert i == item
@@ -32,7 +32,7 @@ defmodule TLRSSTest do
   end
 
   test "remove item" do
-    {:ok, pid} = ItemBucket.start_link([1,2,3,4,5])
+    {:ok, pid} = ItemBucket.start_link [1,2,3,4,5]
 
     ItemBucket.remove_item pid, 2
     ItemBucket.remove_item pid, 4
@@ -42,25 +42,25 @@ defmodule TLRSSTest do
   end
 
   test "remove items" do
-    {:ok, pid} = ItemBucket.start_link([1, 2, 3, 4, 5])
+    {:ok, pid} = ItemBucket.start_link [1, 2, 3, 4, 5]
 
-    ItemBucket.remove_items(pid, [2, 4])
+    ItemBucket.remove_items pid, [2, 4] 
 
     {:items, items} = ItemBucket.get_items pid
     assert items == [1, 3, 5]
   end
 
   test "remove matching" do
-    {:ok, pid} = ItemBucket.start_link([1, 2, 3, 4, 5])
+    {:ok, pid} = ItemBucket.start_link [1, 2, 3, 4, 5] 
 
-    ItemBucket.remove_matching(pid, fn n -> rem(n, 2) == 0 end)
+    ItemBucket.remove_matching pid, fn n -> rem(n, 2) == 0 end 
 
     {:items, items} = ItemBucket.get_items pid
     assert items == [1, 3, 5]
   end
 
   test "add items, some already present" do
-    {:ok, pid} = ItemBucket.start_link([1, 2, 3, 4, 5])
+    {:ok, pid} = ItemBucket.start_link [1, 2, 3, 4, 5]
     is = [2,3, 42, 1337]
 
     {{:ok, new_items}, {:seen, seen_items}} = ItemBucket.add_items pid, is
@@ -70,7 +70,7 @@ defmodule TLRSSTest do
   end
 
   test "add items, all already present" do
-    {:ok, pid} = ItemBucket.start_link([1, 2, 3, 4, 5])
+    {:ok, pid} = ItemBucket.start_link [1, 2, 3, 4, 5]
     is = [2, 3, 1, 4, 5]
 
     {{:ok, new_items}, {:seen, seen_items}} = ItemBucket.add_items pid, is
@@ -80,7 +80,7 @@ defmodule TLRSSTest do
   end
 
   test "add items, none already present" do
-    {:ok, pid} = ItemBucket.start_link([1,2,3,4])
+    {:ok, pid} = ItemBucket.start_link [1,2,3,4]
     is = [42, 1337, 5, 23]
 
     {{:ok, new_items}, {:seen, seen_items}} = ItemBucket.add_items pid, is
