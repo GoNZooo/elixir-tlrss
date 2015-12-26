@@ -33,31 +33,11 @@ defmodule TLRSS.ItemBucket do
     {:reply, {:items, items}, items}
   end
 
-  def handle_call({:add_item, item}, _from, items) do
-    if item_seen? items, item do
-      {:reply, {:seen, item}, items}
-    else
-      {:reply, {:ok, item}, [item|items]}
-    end
-  end
-
   def handle_call({:add_items, new_items}, _from, items) do
     {seen_items, new_items}= new_items
     |> Enum.partition fn i -> item_seen? items, i end
 
-    {:reply, {{:ok, new_items}, {:seen, seen_items}}, new_items ++ items}
-  end
-
-  def handle_call({:seen_item?, item}, _from, items) do
-    if item_seen? items, item do
-      {:reply, {:seen, item}, items}
-    else
-      {:reply, {:not_seen, item}, items}
-    end
-  end
-
-  def handle_cast({:remove_item, item}, items) do
-    {:noreply, List.delete(items, item)}
+    {:reply, {:ok, new_items}, new_items ++ items}
   end
 
   def handle_cast({:remove_items, items_to_delete}, items) do

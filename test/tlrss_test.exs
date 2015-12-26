@@ -34,31 +34,28 @@ defmodule TLRSSTest do
 
   test "add items, some already present" do
     {:ok, pid} = ItemBucket.start_link [1, 2, 3, 4, 5]
-    is = [2,3, 42, 1337]
+    is = [2, 3, 42, 1337]
 
-    {{:ok, new_items}, {:seen, seen_items}} = ItemBucket.add_items pid, is
+    {:ok, new_items} = ItemBucket.add_items pid, is
 
     assert new_items == [42, 1337]
-    assert seen_items == [2, 3]
   end
 
   test "add items, all already present" do
     {:ok, pid} = ItemBucket.start_link [1, 2, 3, 4, 5]
     is = [2, 3, 1, 4, 5]
 
-    {{:ok, new_items}, {:seen, seen_items}} = ItemBucket.add_items pid, is
+    {:ok, new_items} = ItemBucket.add_items pid, is
 
     assert new_items == []
-    assert seen_items == [2, 3, 1, 4, 5]
   end
 
   test "add items, none already present" do
     {:ok, pid} = ItemBucket.start_link [1,2,3,4]
     is = [42, 1337, 5, 23]
 
-    {{:ok, new_items}, {:seen, seen_items}} = ItemBucket.add_items pid, is
+    {:ok, new_items} = ItemBucket.add_items pid, is
 
     assert new_items == [42, 1337, 5, 23]
-    assert seen_items == []
   end
 end
