@@ -45,7 +45,7 @@ defmodule TLRSS.ItemBucket do
   end
 
   def handle_cast({:remove_matching, predicate}, items) do
-    items_to_delete = Enum.filter(items, predicate)
-    {:noreply, Enum.filter(items, fn i -> not i in items_to_delete end)}
+    {_, new_items} = Enum.partition items, predicate
+    {:noreply, new_items}
   end
 end

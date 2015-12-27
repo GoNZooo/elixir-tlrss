@@ -24,9 +24,9 @@ defmodule TLRSSTest do
   end
 
   test "remove matching" do
-    {:ok, pid} = ItemBucket.start_link [1, 2, 3, 4, 5] 
+    {:ok, pid} = ItemBucket.start_link [1, 2, 3, 4, 5]
 
-    ItemBucket.remove_matching pid, fn n -> rem(n, 2) == 0 end 
+    ItemBucket.remove_matching pid, &(rem(&1, 2) == 0)
 
     {:items, items} = ItemBucket.get_items pid
     assert items == [1, 3, 5]
