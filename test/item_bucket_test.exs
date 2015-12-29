@@ -1,6 +1,6 @@
 defmodule ItemBucketTest do
   use ExUnit.Case
-  doctest TLRSS
+  doctest TLRSS.ItemBucket
 
   alias TLRSS.ItemBucket
 
