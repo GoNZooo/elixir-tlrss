@@ -1,4 +1,4 @@
-defmodule TLRSSTest do
+defmodule ItemBucketTest do
   use ExUnit.Case
   doctest TLRSS
 
