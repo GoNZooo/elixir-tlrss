@@ -27,7 +27,7 @@ defmodule TLRSS.ItemBucket do
   ############
 
   defp _new_items(current_items, items_to_add) do
-    Enum.reject items_to_add, &(Map.has_key? current_items, &1)
+    Enum.reject items_to_add, &(Map.has_key? current_items, &1.name)
   end
 
   defp _add_items(current_items, items_to_add) do

@@ -74,4 +74,15 @@ defmodule ItemBucketTest do
     remove_items pid, [item_b]
     assert get_items(pid) == %{}
   end
+
+  test "add items, add same items again" do
+    item_a = %Item{name: "item_a", tlid: "a_tlid", link: "a_link"}
+    item_b = %Item{name: "item_b", tlid: "b_tlid", link: "b_link"}
+    {:ok, pid} = start_link
+
+    {:new_items, new_items_a} = add_items pid, [item_a, item_b]
+    {:new_items, new_items_b} = add_items pid, [item_a, item_b]
+
+    assert new_items_b == []
+  end
 end
