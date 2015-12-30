@@ -19,8 +19,8 @@ defmodule ItemBucketTest do
   end
 
   test "init with items" do
-    item_a = %Item{name: "item_a", tlid: "a_tlid", link: "a_link"}
-    item_b = %Item{name: "item_b", tlid: "b_tlid", link: "b_link"}
+    item_a = %Item{name: "item_a", id: "a_id", link: "a_link"}
+    item_b = %Item{name: "item_b", id: "b_id", link: "b_link"}
     {:ok, pid} = start_link [item_a, item_b]
 
     assert get_items(pid) == %{item_a.name => item_a,
@@ -28,8 +28,8 @@ defmodule ItemBucketTest do
   end
 
   test "add items" do
-    item_a = %Item{name: "item_a", tlid: "a_tlid", link: "a_link"}
-    item_b = %Item{name: "item_b", tlid: "b_tlid", link: "b_link"}
+    item_a = %Item{name: "item_a", id: "a_id", link: "a_link"}
+    item_b = %Item{name: "item_b", id: "b_id", link: "b_link"}
     {:ok, pid} = start_link
 
     {:new_items, _} = add_items pid, [item_a, item_b]
@@ -39,8 +39,8 @@ defmodule ItemBucketTest do
   end
 
   test "add two items" do
-    item_a = %Item{name: "item_a", tlid: "a_tlid", link: "a_link"}
-    item_b = %Item{name: "item_b", tlid: "b_tlid", link: "b_link"}
+    item_a = %Item{name: "item_a", id: "a_id", link: "a_link"}
+    item_b = %Item{name: "item_b", id: "b_id", link: "b_link"}
     {:ok, pid} = start_link
 
     {:new_items, [^item_a]} = add_items pid, [item_a]
@@ -51,8 +51,8 @@ defmodule ItemBucketTest do
   end
 
   test "add two items, remove both at once" do
-    item_a = %Item{name: "item_a", tlid: "a_tlid", link: "a_link"}
-    item_b = %Item{name: "item_b", tlid: "b_tlid", link: "b_link"}
+    item_a = %Item{name: "item_a", id: "a_id", link: "a_link"}
+    item_b = %Item{name: "item_b", id: "b_id", link: "b_link"}
     {:ok, pid} = start_link
 
     {:new_items, _} = add_items pid, [item_a, item_b]
@@ -62,8 +62,8 @@ defmodule ItemBucketTest do
   end
 
   test "add two items, remove separately" do
-    item_a = %Item{name: "item_a", tlid: "a_tlid", link: "a_link"}
-    item_b = %Item{name: "item_b", tlid: "b_tlid", link: "b_link"}
+    item_a = %Item{name: "item_a", id: "a_id", link: "a_link"}
+    item_b = %Item{name: "item_b", id: "b_id", link: "b_link"}
     {:ok, pid} = start_link
 
     {:new_items, _} = add_items pid, [item_a, item_b]
@@ -76,8 +76,8 @@ defmodule ItemBucketTest do
   end
 
   test "add items, add same items again" do
-    item_a = %Item{name: "item_a", tlid: "a_tlid", link: "a_link"}
-    item_b = %Item{name: "item_b", tlid: "b_tlid", link: "b_link"}
+    item_a = %Item{name: "item_a", id: "a_id", link: "a_link"}
+    item_b = %Item{name: "item_b", id: "b_id", link: "b_link"}
     {:ok, pid} = start_link
 
     {:new_items, new_items_a} = add_items pid, [item_a, item_b]

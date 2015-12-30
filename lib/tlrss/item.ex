@@ -1,3 +1,3 @@
 defmodule TLRSS.Item do
-  defstruct [:tlid, :name, :link]
+  defstruct [:id, :name, :link]
 end
