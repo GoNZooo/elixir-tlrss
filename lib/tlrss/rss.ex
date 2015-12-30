@@ -7,7 +7,7 @@ defmodule TLRSS.RSS do
     feed.entries
   end
 
-  def entry_to_item(%FeederEx.Entry{title: name, id: tlid, link: link}) do
-    %Item{name: name, tlid: tlid, link: link}
+  def entry_to_item(%FeederEx.Entry{title: name, id: id, link: link}) do
+    %Item{name: name, id: id, link: link}
   end
 end

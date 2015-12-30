@@ -80,7 +80,7 @@ defmodule ItemBucketTest do
     item_b = %Item{name: "item_b", id: "b_id", link: "b_link"}
     {:ok, pid} = start_link
 
-    {:new_items, new_items_a} = add_items pid, [item_a, item_b]
+    {:new_items, _} = add_items pid, [item_a, item_b]
     {:new_items, new_items_b} = add_items pid, [item_a, item_b]
 
     assert new_items_b == []
