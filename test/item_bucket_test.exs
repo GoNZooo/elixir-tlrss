@@ -9,10 +9,12 @@ defmodule ItemBucketTest do
     start_link: 1,
     get_items: 1,
     add_items: 2,
+    remove_items: 2,
   ]
 
   test "init without items" do
     {:ok, pid} = start_link
+
     assert get_items(pid) == %{}
   end
 
@@ -36,7 +38,7 @@ defmodule ItemBucketTest do
                                item_b.name => item_b}
   end
 
-  test "two add items" do
+  test "add two items" do
     item_a = %Item{name: "item_a", tlid: "a_tlid", link: "a_link"}
     item_b = %Item{name: "item_b", tlid: "b_tlid", link: "b_link"}
     {:ok, pid} = start_link
@@ -46,5 +48,30 @@ defmodule ItemBucketTest do
 
     assert get_items(pid) == %{item_a.name => item_a,
                                item_b.name => item_b}
+  end
+
+  test "add two items, remove both at once" do
+    item_a = %Item{name: "item_a", tlid: "a_tlid", link: "a_link"}
+    item_b = %Item{name: "item_b", tlid: "b_tlid", link: "b_link"}
+    {:ok, pid} = start_link
+
+    {:new_items, _} = add_items pid, [item_a, item_b]
+    remove_items pid, [item_a, item_b]
+
+    assert get_items(pid) == %{}
+  end
+
+  test "add two items, remove separately" do
+    item_a = %Item{name: "item_a", tlid: "a_tlid", link: "a_link"}
+    item_b = %Item{name: "item_b", tlid: "b_tlid", link: "b_link"}
+    {:ok, pid} = start_link
+
+    {:new_items, _} = add_items pid, [item_a, item_b]
+
+    remove_items pid, [item_a]
+    assert get_items(pid) == %{item_b.name => item_b}
+
+    remove_items pid, [item_b]
+    assert get_items(pid) == %{}
   end
 end

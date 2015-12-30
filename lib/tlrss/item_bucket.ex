@@ -14,8 +14,12 @@ defmodule TLRSS.ItemBucket do
     GenServer.call pid, :get_items
   end
 
-  def add_items(pid, items) do
-    GenServer.call pid, {:add_items, items}
+  def add_items(pid, items_to_add) do
+    GenServer.call pid, {:add_items, items_to_add}
+  end
+
+  def remove_items(pid, items_to_remove) do
+    GenServer.cast pid, {:remove_items, items_to_remove}
   end
 
   ############
@@ -30,6 +34,10 @@ defmodule TLRSS.ItemBucket do
     Enum.into items_to_add, current_items, fn i = %Item{} -> {i.name, i} end
   end
 
+  defp _remove_items(current_items, items_to_remove) do
+    Map.drop current_items, Enum.map(items_to_remove, &(&1.name))
+  end
+
   def init(init_items) do
     {:ok, Enum.into(init_items, %{}, fn i = %Item{} -> {i.name, i} end)}
   end
@@ -41,5 +49,9 @@ defmodule TLRSS.ItemBucket do
   def handle_call({:add_items, items_to_add}, _from, current_items) do
     new_items = _new_items current_items, items_to_add
     {:reply, {:new_items, new_items}, _add_items(current_items, new_items)}
+  end
+
+  def handle_cast({:remove_items, items_to_remove}, current_items) do
+    {:noreply, _remove_items(current_items, items_to_remove)}
   end
 end
