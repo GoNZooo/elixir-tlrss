@@ -2,69 +2,49 @@ defmodule ItemBucketTest do
   use ExUnit.Case
   doctest TLRSS.ItemBucket
 
+  alias TLRSS.Item
   import TLRSS.ItemBucket,
   only: [
     start_link: 0,
     start_link: 1,
-    add_items: 2,
     get_items: 1,
-    remove_items: 2,
-    remove_matching: 2,
-
+    add_items: 2,
   ]
 
-  test "add items" do
+  test "init without items" do
     {:ok, pid} = start_link
-    items = [42, 1337, 13, 5, 23]
-
-    add_items pid, items
-    {:items, is} = get_items pid
-
-    assert is == items
+    assert get_items(pid) == %{}
   end
 
-  test "remove items" do
-    {:ok, pid} = start_link [1, 2, 3, 4, 5]
+  test "init with items" do
+    item_a = %Item{name: "item_a", tlid: "a_tlid", link: "a_link"}
+    item_b = %Item{name: "item_b", tlid: "b_tlid", link: "b_link"}
+    {:ok, pid} = start_link [item_a, item_b]
 
-    remove_items pid, [2, 4] 
-
-    {:items, items} = get_items pid
-    assert items == [1, 3, 5]
+    assert get_items(pid) == %{item_a.name => item_a,
+                               item_b.name => item_b}
   end
 
-  test "remove matching" do
-    {:ok, pid} = start_link [1, 2, 3, 4, 5]
+  test "add items" do
+    item_a = %Item{name: "item_a", tlid: "a_tlid", link: "a_link"}
+    item_b = %Item{name: "item_b", tlid: "b_tlid", link: "b_link"}
+    {:ok, pid} = start_link
 
-    remove_matching pid, &(rem(&1, 2) == 0)
+    {:new_items, _} = add_items pid, [item_a, item_b]
 
-    {:items, items} = get_items pid
-    assert items == [1, 3, 5]
+    assert get_items(pid) == %{item_a.name => item_a,
+                               item_b.name => item_b}
   end
 
-  test "add items, some already present" do
-    {:ok, pid} = start_link [1, 2, 3, 4, 5]
-    is = [2, 3, 42, 1337]
+  test "two add items" do
+    item_a = %Item{name: "item_a", tlid: "a_tlid", link: "a_link"}
+    item_b = %Item{name: "item_b", tlid: "b_tlid", link: "b_link"}
+    {:ok, pid} = start_link
 
-    {:ok, new_items} = add_items pid, is
+    {:new_items, [^item_a]} = add_items pid, [item_a]
+    {:new_items, [^item_b]} = add_items pid, [item_b]
 
-    assert new_items == [42, 1337]
-  end
-
-  test "add items, all already present" do
-    {:ok, pid} = start_link [1, 2, 3, 4, 5]
-    is = [2, 3, 1, 4, 5]
-
-    {:ok, new_items} = add_items pid, is
-
-    assert new_items == []
-  end
-
-  test "add items, none already present" do
-    {:ok, pid} = start_link [1,2,3,4]
-    is = [42, 1337, 5, 23]
-
-    {:ok, new_items} = add_items pid, is
-
-    assert new_items == [42, 1337, 5, 23]
+    assert get_items(pid) == %{item_a.name => item_a,
+                               item_b.name => item_b}
   end
 end
