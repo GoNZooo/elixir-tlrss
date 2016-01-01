@@ -6,7 +6,7 @@ defmodule TLRSS.ItemBucket do
   #######
   # API #
   #######
-  def start_link(init_items \\ [], opts \\ []) do
+  def start_link(init_items \\ [], opts \\ [name: ItemBucket]) do
     GenServer.start_link(__MODULE__, init_items, opts)
   end
 
@@ -43,7 +43,7 @@ defmodule TLRSS.ItemBucket do
   end
 
   def handle_call(:get_items, _from, current_items) do
-    {:reply, current_items, current_items}
+    {:reply, {:items, current_items}, current_items}
   end
 
   def handle_call({:add_items, items_to_add}, _from, current_items) do
