@@ -10,6 +10,7 @@ defmodule TLRSS do
       # Start the Ecto repository
       worker(TLRSS.ItemBucket, []),
       worker(TLRSS.FeedReader, []),
+      supervisor(Task.Supervisor, [[name: TLRSS.DownloadSupervisor]]),
       # Here you could define other workers and supervisors as children
       # worker(Wedding.Worker, [arg1, arg2, arg3]),
     ]
