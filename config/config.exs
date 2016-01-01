@@ -29,6 +29,8 @@ use Mix.Config
 #
 #     import_config "#{Mix.env}.exs"
 
+config :tlrss, download_dir: System.user_home! <> "/media/torrents/watch/"
+
 config :tlrss, TLRSS.Repo,
 adapter: Ecto.Adapters.Postgres,
 database: "tlrss_dev",
