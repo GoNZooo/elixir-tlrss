@@ -4,7 +4,7 @@ defmodule TLRSS.FeedReader do
   alias TLRSS.RSS
 
   def start_link(feeds \\ [Application.get_env(:tlrss, :rss_url)],
-                 opts \\ [name: FeedReader]) do
+                 opts \\ [name: __MODULE__]) do
     GenServer.start_link(__MODULE__, feeds, opts)
   end
 
