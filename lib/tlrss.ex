@@ -8,6 +8,7 @@ defmodule TLRSS do
 
     children = [
       # Start the Ecto repository
+      worker(TLRSS.ItemFilter, []),
       worker(TLRSS.ItemBucket, []),
       worker(TLRSS.FeedReader, []),
       supervisor(Task.Supervisor, [[name: TLRSS.DownloadSupervisor]]),
