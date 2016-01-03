@@ -1,5 +1,23 @@
 defmodule TLRSS.Download do
-  def download_file(url) when is_binary(url) do
+  use GenServer
+
+  #######
+  # API #
+  #######
+
+  def start_link(opts \\ [name: __MODULE__]) do
+    GenServer.start_link(__MODULE__, [], opts)
+  end
+
+  def download(url, pid \\ __MODULE__) do
+    GenServer.cast(pid, {:download, url})
+  end
+
+  ############
+  # Internal #
+  ############
+
+  defp download_file(url) when is_binary(url) do
     filename = List.last String.split(url, "/")
     {:ok, resp} = :httpc.request(:get,
                                  {String.to_char_list(url), []},
@@ -9,16 +27,18 @@ defmodule TLRSS.Download do
     {{:filename, filename}, {:data, body}}
   end
 
-  def write_file(filename, data) do
+  defp write_file(filename, data) do
     download_dir = Application.get_env :tlrss, :download_dir
     full_path = download_dir <> filename
 
     File.write! full_path, data
   end
 
-  def start_download(url) do
-    dl = Task.Supervisor.async(TLRSS.DownloadSupervisor, fn -> download_file(url) end)
+  def handle_cast({:download, url}, state) do
+    dl = Task.Supervisor.async(TLRSS.DownloadSupervisor,
+      fn -> download_file(url) end)
     {{:filename, filename}, {:data, data}} = Task.await(dl)
     write_file(filename, data)
+    {:noreply, state}
   end
 end
