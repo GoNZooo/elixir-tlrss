@@ -8,9 +8,9 @@ defmodule TLRSS.FeedReader do
     GenServer.start_link(__MODULE__, feeds, opts)
   end
 
-  def get_entries(pid), do: GenServer.call pid, :get_entries
+  def get_entries(pid \\ __MODULE__), do: GenServer.call pid, :get_entries
 
-  def get_feeds(pid), do: GenServer.call pid, :get_feeds
+  def get_feeds(pid \\ __MODULE__), do: GenServer.call pid, :get_feeds
 
   def init(init_feeds), do: {:ok, init_feeds}
 
