@@ -26,7 +26,7 @@ defmodule ItemBucketTest do
 
     assert get_items(pid) == {:items,
                               %{item_a.name => item_a,
-                               item_b.name => item_b}}
+                                item_b.name => item_b}}
   end
 
   test "add items" do
@@ -38,7 +38,7 @@ defmodule ItemBucketTest do
 
     assert get_items(pid) == {:items,
                               %{item_a.name => item_a,
-                               item_b.name => item_b}}
+                                item_b.name => item_b}}
   end
 
   test "add two items" do
@@ -51,7 +51,7 @@ defmodule ItemBucketTest do
 
     assert get_items(pid) == {:items,
                               %{item_a.name => item_a,
-                               item_b.name => item_b}}
+                                item_b.name => item_b}}
   end
 
   test "add two items, remove both at once" do
