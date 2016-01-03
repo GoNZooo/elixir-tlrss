@@ -12,7 +12,6 @@ defmodule TLRSS.Driver do
   end
 
   def drive(sleep_time) do
-    Logger.debug("Driving...")
     {:entries, entries} = FeedReader.get_entries
     {:new_items, new_items} = ItemBucket.add_items entries
     {:matches, matches} = ItemFilter.matches? new_items
