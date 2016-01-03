@@ -10,15 +10,15 @@ defmodule TLRSS.ItemBucket do
     GenServer.start_link(__MODULE__, init_items, opts)
   end
 
-  def get_items(pid) do
+  def get_items(pid \\ __MODULE__) do
     GenServer.call pid, :get_items
   end
 
-  def add_items(pid, items_to_add) do
+  def add_items(items_to_add, pid \\ __MODULE__) do
     GenServer.call pid, {:add_items, items_to_add}
   end
 
-  def remove_items(pid, items_to_remove) do
+  def remove_items(items_to_remove, pid \\ __MODULE__) do
     GenServer.cast pid, {:remove_items, items_to_remove}
   end
 
