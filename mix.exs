@@ -7,6 +7,8 @@ defmodule TLRSS.Mixfile do
      elixir: "~> 1.2",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
+     escript: [main_module: TLRSS,
+               path: "bin/tlrss"],
      deps: deps]
   end
 
