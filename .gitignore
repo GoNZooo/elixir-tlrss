@@ -2,5 +2,6 @@
 /cover
 /deps
 /config/rss_creds.exs
+/config/rss_filters.exs
 erl_crash.dump
 *.ez
