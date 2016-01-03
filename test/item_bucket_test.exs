@@ -89,4 +89,15 @@ defmodule ItemBucketTest do
 
     assert new_items_b == []
   end
+
+  test "add item, add two items, one new" do
+    item_a = %Item{name: "item_a", id: "a_id", link: "a_link"}
+    item_b = %Item{name: "item_b", id: "b_id", link: "b_link"}
+    {:ok, pid} = start_link([], [name: :test_bucket])
+
+    {:new_items, _} = add_items [item_a], pid
+    {:new_items, new_items_b} = add_items [item_a, item_b], pid
+
+    assert new_items_b == [item_b]
+  end
 end
