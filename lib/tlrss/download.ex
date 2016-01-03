@@ -1,10 +1,11 @@
 defmodule TLRSS.Download do
   def download_file(url) when is_binary(url) do
     filename = List.last String.split(url, "/")
-    {:ok, {{_, 200, 'OK'}, _headers, body}} = :httpc.request(:get, {String.to_char_list(url),
-                                                                    []},
-                                                             [],
-                                                             [body_format: :binary])
+    {:ok, resp} = :httpc.request(:get,
+                                 {String.to_char_list(url), []},
+                                 [],
+                                 [body_format: :binary])
+    {{_, 200, 'OK'}, _headers, body} = resp
     {{:filename, filename}, {:data, body}}
   end
 
