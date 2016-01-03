@@ -6,6 +6,7 @@ defmodule TLRSS.ItemBucket do
   #######
   # API #
   #######
+
   def start_link(init_items \\ [], opts \\ [name: __MODULE__]) do
     GenServer.start_link(__MODULE__, init_items, opts)
   end
@@ -23,7 +24,7 @@ defmodule TLRSS.ItemBucket do
   end
 
   ############
-  # Handling #
+  # Internal #
   ############
 
   defp _new_items(current_items, items_to_add) do
