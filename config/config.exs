@@ -38,3 +38,4 @@ username: "postgres",
 password: "postgres"
 
 import_config "rss_creds.exs"
+import_config "rss_filters.exs"
