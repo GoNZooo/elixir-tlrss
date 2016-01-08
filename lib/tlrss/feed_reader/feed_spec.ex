@@ -1,3 +1,3 @@
 defmodule TLRSS.FeedReader.FeedSpec do
-  @type t :: {atom, String.t}
+  @type t :: String.t
 end
