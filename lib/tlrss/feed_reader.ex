@@ -3,14 +3,17 @@ defmodule TLRSS.FeedReader do
 
   alias TLRSS.FeedReader.RSS
 
-  def start_link(init_feed, opts \\ [name: __MODULE__]) do
+  @spec start_link(String.t, [name: atom]) :: GenServer.on_start
+  def start_link(init_feed, opts) do
     GenServer.start_link(__MODULE__, init_feed, opts)
   end
 
+  @spec get_entries(pid) :: {atom, [TLRSS.Item.t]}
   def get_entries(pid \\ __MODULE__) do
     GenServer.call(pid, :get_entries, 30000)
   end
 
+  @spec get_feed(pid) :: {atom, String.t}
   def get_feed(pid \\ __MODULE__), do: GenServer.call pid, :get_feed
 
   def init(init_feed), do: {:ok, init_feed}
