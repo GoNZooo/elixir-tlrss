@@ -1,6 +1,8 @@
 defmodule TLRSS.Download do
   use GenServer
 
+  require Logger
+
   #######
   # API #
   #######
@@ -34,11 +36,12 @@ defmodule TLRSS.Download do
     File.write! full_path, data
   end
 
-  def handle_cast({:download, url}, state) do
+  def handle_cast({:download, item}, state) do
     dl = Task.Supervisor.async(TLRSS.DownloadSupervisor,
-      fn -> download_file(url) end)
+      fn -> download_file(item.link) end)
     {{:filename, filename}, {:data, data}} = Task.await(dl)
     write_file(filename, data)
+    Logger.info("Downloaded '#{item.name}'.")
     {:noreply, state}
   end
 end
