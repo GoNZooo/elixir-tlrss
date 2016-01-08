@@ -3,28 +3,25 @@ defmodule TLRSS.FeedReader do
 
   alias TLRSS.RSS
 
-  def start_link(feeds \\ [Application.get_env(:tlrss, :rss_url)],
-                 opts \\ [name: __MODULE__]) do
-    GenServer.start_link(__MODULE__, feeds, opts)
+  def start_link(init_feed, opts \\ [name: __MODULE__]) do
+    GenServer.start_link(__MODULE__, init_feed, opts)
   end
 
   def get_entries(pid \\ __MODULE__) do
     GenServer.call(pid, :get_entries, 30000)
   end
 
-  def get_feeds(pid \\ __MODULE__), do: GenServer.call pid, :get_feeds
+  def get_feeds(pid \\ __MODULE__), do: GenServer.call pid, :get_feed
 
-  def init(init_feeds), do: {:ok, init_feeds}
+  def init(init_feed), do: {:ok, init_feed}
 
-  def handle_call(:get_entries, _from, feeds) do
-    entry_items = feeds
-    |> Enum.flat_map(&RSS.get_entries/1)
-    |> Enum.map(&RSS.entry_to_item/1)
+  def handle_call(:get_entries, _from, feed) do
+    items = RSS.get_entries(feed) |> Enum.map(RSS.entry_to_item/1)
 
-    {:reply, {:entries, entry_items}, feeds}
+    {:reply, {:entries, items}, feed}
   end
 
-  def handle_call(:get_feeds, _from, feeds) do
-    {:reply, {:feeds, feeds}, feeds}
+  def handle_call(:get_feeds, _from, feed) do
+    {:reply, {:feeds, feed}, feed}
   end
 end
