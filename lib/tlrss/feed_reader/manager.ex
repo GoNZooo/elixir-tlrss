@@ -1,16 +1,16 @@
 defmodule TLRSS.FeedReader.Manager do
   use GenServer
   alias TLRSS.FeedReader.FeedSpec
+  alias TLRSS.FeedReader.Supervisor, as: ReaderSup
 
   #######
   # API #
   #######
 
-  @spec start_link([FeedSpec.t], pid, [name: atom]) :: {:ok, GenServer.on_start}
+  @spec start_link([FeedSpec.t], [name: atom]) :: GenServer.on_start
   def start_link(feeds \\ Application.get_env(:tlrss, :rss_feeds),
-                 reader_supervisor \\ TLRSS.FeedReader.Supervisor,
                  opts \\ [name: __MODULE__]) do
-    GenServer.start_link(__MODULE__, {feeds, reader_supervisor}, opts)
+    GenServer.start_link(__MODULE__, feeds, opts)
   end
 
   @spec add_feed(FeedSpec.t, pid) :: :ok
@@ -27,17 +27,18 @@ defmodule TLRSS.FeedReader.Manager do
   # Internal #
   ############
 
-  def init({feeds, reader_sup}) do
-    Enum.each(feeds, &(TLRSS.FeedReader.Supervisor.start_child(&1)))
-    {:ok, {feeds, reader_sup}}
+  def init(feeds) do
+    feeds
+    |> Enum.each(&(ReaderSup.start_child(&1)))
+    {:ok, feeds}
   end
 
-  def handle_cast({:add_feed, feed}, {feeds, reader_sup}) do
-    TLRSS.FeedReader.Supervisor.start_child(feed)
-    {:noreply, {[feed | feeds], reader_sup}}
+  def handle_cast({:add_feed, feed}, feeds) do
+    ReaderSup.start_child(feed)
+    {:noreply, [feed | feeds]}
   end
 
-  def handle_call(:get_feeds, _from, {feeds, reader_sup}) do
-    {:reply, {:feeds, feeds}, {feeds, reader_sup}}
+  def handle_call(:get_feeds, _from, feeds) do
+    {:reply, {:feeds, feeds}, feeds}
   end
 end
