@@ -1,6 +1,8 @@
 defmodule TLRSS.Item do
   defstruct [:id, :name, :link]
 
+  @type t :: %TLRSS.Item{id: String.t, name: String.t, link: String.t}
+
   defimpl Inspect, for: TLRSS.Item do
     def inspect(%TLRSS.Item{id: id, name: name, link: link}, _) do
       short_link = List.last(String.split(link, "/"))
