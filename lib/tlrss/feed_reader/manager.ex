@@ -8,7 +8,7 @@ defmodule TLRSS.FeedReader.Manager do
   #######
 
   @spec start_link([FeedSpec.t], [name: atom]) :: GenServer.on_start
-  def start_link(feeds \\ Application.get_env(:tlrss, :rss_feeds),
+  def start_link(feeds \\ Application.get_env(:tlrss, :feeds),
                  opts \\ [name: __MODULE__]) do
     GenServer.start_link(__MODULE__, feeds, opts)
   end
