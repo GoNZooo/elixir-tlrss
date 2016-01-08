@@ -2,7 +2,6 @@
 /_build
 /cover
 /deps
-/config/rss_creds.exs
-/config/rss_filters.exs
+/config/rss_settings.exs
 erl_crash.dump
 *.ez
