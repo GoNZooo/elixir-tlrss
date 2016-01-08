@@ -2,6 +2,7 @@ defmodule TLRSS.FeedReader.RSS do
   alias TLRSS.Item
 
   def get_entries(rss_url \\ Application.get_env(:tlrss, :rss_url)) do
+    response = HTTPoison.get(rss_url, [{"Accept-Encoding:", "utf-8"}])
     {:ok, %HTTPoison.Response{body: body}} = HTTPoison.get(rss_url)
     {:ok, feed, _} = FeederEx.parse body 
     feed.entries
