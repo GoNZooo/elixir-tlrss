@@ -1,4 +1,4 @@
-defmodule TLRSS.RSS do
+defmodule TLRSS.FeedReader.RSS do
   alias TLRSS.Item
 
   def get_entries(rss_url \\ Application.get_env(:tlrss, :rss_url)) do
