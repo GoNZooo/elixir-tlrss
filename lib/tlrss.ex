@@ -9,9 +9,9 @@ defmodule TLRSS do
       worker(TLRSS.Download, []),
       worker(TLRSS.ItemFilter, []),
       worker(TLRSS.ItemBucket, []),
-      worker(TLRSS.FeedReader, []),
+      supervisor(TLRSS.FeedReader.Supervisor, []),
       supervisor(Task.Supervisor, [[name: TLRSS.DownloadSupervisor]]),
-      worker(TLRSS.Driver, [])
+      #worker(TLRSS.Driver, [])
       # Here you could define other workers and supervisors as children
       # worker(Wedding.Worker, [arg1, arg2, arg3]),
     ]
