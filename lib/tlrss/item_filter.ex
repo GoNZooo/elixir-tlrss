@@ -10,8 +10,8 @@ defmodule TLRSS.ItemFilter do
     GenServer.start_link(__MODULE__, filters, opts)
   end
 
-  def matches?(items, pid \\ __MODULE__) do
-    GenServer.call(pid, {:matches?, items})
+  def filter(items, pid \\ __MODULE__) do
+    GenServer.cast(pid, {:filter, items})
   end
 
   def get_filters(pid \\ __MODULE__) do
@@ -19,11 +19,11 @@ defmodule TLRSS.ItemFilter do
   end
 
   def set_filters(new_filters, pid \\ __MODULE__) do
-    GenServer.call(pid, {:set_filters, new_filters})
+    GenServer.cast(pid, {:set_filters, new_filters})
   end
 
   def add_filter(new_filter, pid \\ __MODULE__) do
-    GenServer.call(pid, {:add_filter, new_filter})
+    GenServer.cast(pid, {:add_filter, new_filter})
   end
 
   ############
@@ -38,17 +38,21 @@ defmodule TLRSS.ItemFilter do
     {:ok, filters}
   end
 
-  def handle_call({:matches?, items}, _from, filters) do
+  def handle_cast({:filter, items}, filters) do
     matches = Enum.filter(items, &(any_matches?(&1, filters)))
-    {:reply, {:matches, matches}, filters}
+
+    matches
+    |> Enum.each(&(TLRSS.Download.download(&1)))
+
+    {:noreply, filters}
   end
 
-  def handle_call({:set_filters, new_filters}, _from, _filters) do
-    {:reply, {:new_filters, new_filters}, new_filters}
+  def handle_cast({:set_filters, new_filters}, _filters) do
+    {:noreply, new_filters}
   end
 
-  def handle_call({:add_filter, new_filter}, _from, filters) do
-    {:reply, {:new_filter, new_filter}, [new_filter | filters]}
+  def handle_cast({:add_filter, new_filter}, filters) do
+    {:noreply, [new_filter | filters]}
   end
 
   def handle_call(:get_filters, _from, filters) do
