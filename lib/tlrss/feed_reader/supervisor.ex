@@ -1,17 +1,31 @@
 defmodule TLRSS.FeedReader.Supervisor do
   use Supervisor
 
-  def start_link(feeds \\ Application.get_env(:tlrss, :rss_feeds),
-                 opts \\ [name: __MODULE__]) do
-    Supervisor.start_link(__MODULE__, feeds, opts)
+  alias TLRSS.FeedReader.FeedSpec
+
+  #######
+  # API #
+  #######
+
+  @spec start_link([name: atom]) :: Supervisor.on_start()
+  def start_link(opts \\ [name: __MODULE__]) do
+    Supervisor.start_link(__MODULE__, [], opts)
   end
 
-  def init(feeds) do
-    children = Enum.map(feeds,
-      fn {name, url} ->
-        worker(TLRSS.FeedReader, [url], name: name)
-      end)
+  @spec start_child(FeedSpec.t) :: Supervisor.Spec.on_start
+  def start_child({feed_name, feed_url}) do
+    Supervisor.start_child(__MODULE__, [feed_url, [name: feed_name]])
+  end
 
-      supervise(children, strategy: :one_for_one)
+  ############
+  # Internal #
+  ############
+
+  def init([]) do
+    children = [
+      worker(TLRSS.FeedReader, [], restart: :transient)
+    ]
+
+    supervise(children, strategy: :simple_one_for_one)
   end
 end
