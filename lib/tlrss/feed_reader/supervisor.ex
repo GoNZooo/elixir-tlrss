@@ -13,8 +13,8 @@ defmodule TLRSS.FeedReader.Supervisor do
   end
 
   @spec start_child(FeedSpec.t) :: Supervisor.Spec.on_start
-  def start_child({feed_name, feed_url}) do
-    Supervisor.start_child(__MODULE__, [feed_url, [name: feed_name]])
+  def start_child(feed_url) do
+    Supervisor.start_child(__MODULE__, [feed_url])
   end
 
   ############
