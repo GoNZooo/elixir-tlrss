@@ -1,4 +1,7 @@
 defmodule TLRSS.Download do
+  @moduledoc"""
+  Module responsible for downloading the files in the feed.
+  """
   use GenServer
 
   require Logger
@@ -7,10 +10,20 @@ defmodule TLRSS.Download do
   # API #
   #######
 
+  @doc"""
+  Starts the Download server. Takes no arguments, as there
+  is no state to keep.
+  """
   def start_link(opts \\ [name: __MODULE__]) do
     GenServer.start_link(__MODULE__, [], opts)
   end
 
+  @spec download(String.t, pid) :: :ok
+  @doc"""
+  Requests the start of a download, referred to only by URL.
+  Internally, the server will spawn a Task in which the server
+  downloads the file.
+  """
   def download(url, pid \\ __MODULE__) do
     GenServer.cast(pid, {:download, url})
   end
