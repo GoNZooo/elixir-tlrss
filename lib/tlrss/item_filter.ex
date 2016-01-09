@@ -1,15 +1,23 @@
 defmodule TLRSS.ItemFilter do
+  @moduledoc"""
+  Module to filter incoming items from the ItemBucket, to determine
+  if these should be sent for downloading. Internally, keeps a state
+  of all registered filters to apply to each incoming item.
+  """
   use GenServer
+  alias TLRSS.Item
 
   #######
   # API #
   #######
 
+  @spec start_link([Regex.t], [name: atom]) :: {:ok, pid}
   def start_link(filters \\ Application.get_env(:tlrss, :filters),
                  opts \\ [name: __MODULE__]) do
     GenServer.start_link(__MODULE__, filters, opts)
   end
 
+  @spec filter([Item.t], pid) :: :ok
   def filter(items, pid \\ __MODULE__) do
     GenServer.cast(pid, {:filter, items})
   end
@@ -18,10 +26,12 @@ defmodule TLRSS.ItemFilter do
     GenServer.call(pid, :get_filters)
   end
 
+  @spec set_filters([Regex.t], pid) :: :ok
   def set_filters(new_filters, pid \\ __MODULE__) do
     GenServer.cast(pid, {:set_filters, new_filters})
   end
 
+  @spec add_filter(Regex.t, pid) :: :ok
   def add_filter(new_filter, pid \\ __MODULE__) do
     GenServer.cast(pid, {:add_filter, new_filter})
   end
