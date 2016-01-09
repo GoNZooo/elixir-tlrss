@@ -1,4 +1,9 @@
 defmodule TLRSS.FeedReader.Supervisor do
+  @moduledoc"""
+  Module to keep track of and supervise the FeedReaders. This is interacted with
+  by the FeedReader.Manager and only through that. As such, it's not advisable
+  to add children without going through the manager.
+  """
   use Supervisor
 
   alias TLRSS.FeedReader.FeedSpec
