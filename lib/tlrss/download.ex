@@ -22,7 +22,7 @@ defmodule TLRSS.Download do
   @doc"""
   Requests the start of a download, referred to only by URL.
   Internally, the server will spawn a Task in which the server
-  downloads the file.
+  downloads the file."
   """
   def download(url, pid \\ __MODULE__) do
     GenServer.cast(pid, {:download, url})
