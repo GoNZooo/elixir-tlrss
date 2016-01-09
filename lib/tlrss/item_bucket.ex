@@ -1,4 +1,9 @@
 defmodule TLRSS.ItemBucket do
+  @moduledoc"""
+  Module to hold the items fetched from the FeedReaders. When
+  new items are discovered to be added to the ItemBucket, it will
+  report these to the ItemFilter, thus chaining the items.
+  """
   use GenServer
 
   alias TLRSS.Item
@@ -7,18 +12,22 @@ defmodule TLRSS.ItemBucket do
   # API #
   #######
 
+  @spec start_link([Item.t], [name: atom]) :: {:ok, pid}
   def start_link(init_items \\ [], opts \\ [name: __MODULE__]) do
     GenServer.start_link(__MODULE__, init_items, opts)
   end
 
+  @spec get_items(pid) :: [Item.t]
   def get_items(pid \\ __MODULE__) do
     GenServer.call(pid, :get_items)
   end
 
+  @spec add_items([Item.t], pid) :: :ok
   def add_items(items_to_add, pid \\ __MODULE__) do
     GenServer.cast(pid, {:add_items, items_to_add})
   end
 
+  @spec remove_items([Item.t], pid) :: :ok
   def remove_items(items_to_remove, pid \\ __MODULE__) do
     GenServer.cast(pid, {:remove_items, items_to_remove})
   end
