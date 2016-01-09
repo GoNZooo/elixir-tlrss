@@ -22,7 +22,12 @@ Create a file in the config directory called 'rss_settings.exs':
 
 The given filters will be applied to every new incoming RSS item
 and the matching ones will be downloaded to the directory specified
-for downloading.
+for downloading. Note that the filters are regular expressions and that
+you may add them in whatever form you see fit.
+
+In the example here, they're created using the sigil syntax of Elixir, but
+as long as the list is a list of regular expressions the application
+does not care.
 
 This is best done in tandem with a 'watch-directory' setting in whichever
 torrent client you use, so that the torrents start automatically once
