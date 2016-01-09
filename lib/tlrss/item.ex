@@ -1,4 +1,9 @@
 defmodule TLRSS.Item do
+  @moduledoc"""
+  A struct to hold the most important information about items from the feed.
+  The field names should be fairly appropriate for most applications outside
+  torrent and TL.
+  """
   defstruct [:id, :name, :link]
 
   @type t :: %TLRSS.Item{id: String.t, name: String.t, link: String.t}
