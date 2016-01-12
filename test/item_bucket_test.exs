@@ -3,5 +3,5 @@ defmodule ItemBucketTest do
   doctest TLRSS.ItemBucket
 
   alias TLRSS.Item
-  import TLRSS.ItemBucket,
+  import TLRSS.ItemBucket
 end
