@@ -31,6 +31,6 @@ defmodule TLRSS.FeedReader.Supervisor do
       worker(TLRSS.FeedReader, [], restart: :transient)
     ]
 
-    supervise(children, strategy: :simple_one_for_one)
+    supervise(children, strategy: :simple_one_for_one, max_restarts: 30)
   end
 end
