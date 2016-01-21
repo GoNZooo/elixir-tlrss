@@ -8,9 +8,13 @@ defmodule TLRSS.FeedReader.RSS do
   @doc"Fetches the specified RSS feed and returns all entries from it."
   def get_entries(rss_url \\ Application.get_env(:tlrss, :rss_url)) do
     response = HTTPoison.get(rss_url, [{"Accept-Encoding:", "utf-8"}])
-    {:ok, %HTTPoison.Response{body: body}} = HTTPoison.get(rss_url)
-    {:ok, feed, _} = FeederEx.parse body 
-    feed.entries
+    case response do
+      {:ok, %HTTPoison.Response{body: body}} ->
+        {:ok, feed, _} = FeederEx.parse(body)
+        {:entries, feed.entries}
+      {:error, reason} ->
+        {:error, reason}
+    end
   end
 
   @spec entry_to_item(FeederEx.Entry.t) :: Item.t
