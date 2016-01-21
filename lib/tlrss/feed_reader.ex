@@ -10,6 +10,8 @@ defmodule TLRSS.FeedReader do
   """
   alias TLRSS.FeedReader.RSS
 
+  require Logger
+
   @spec start_link(String.t) :: {:ok, pid}
   def start_link(init_feed) do
     Task.start_link(__MODULE__, :read_rss, [init_feed])
@@ -17,9 +19,13 @@ defmodule TLRSS.FeedReader do
 
   @spec read_rss(String.t, number) :: :ok
   def read_rss(init_feed, sleep_time \\ 300000) do
-    items_a = RSS.get_entries(init_feed)
-    items = RSS.get_entries(init_feed) |> Enum.map(&RSS.entry_to_item/1)
-    TLRSS.ItemBucket.add_items(items)
+    case RSS.get_entries(init_feed) do
+      {:entries, entries} ->
+        items = Enum.map(entries, &RSS.entry_to_item/1)
+        TLRSS.ItemBucket.add_items(items)
+      {:error, reason} ->
+        Logger.error(reason)
+    end
 
     :timer.sleep(sleep_time)
     read_rss(init_feed)
