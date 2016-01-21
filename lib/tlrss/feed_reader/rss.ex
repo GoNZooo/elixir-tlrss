@@ -12,7 +12,7 @@ defmodule TLRSS.FeedReader.RSS do
       {:ok, %HTTPoison.Response{body: body}} ->
         {:ok, feed, _} = FeederEx.parse(body)
         {:entries, feed.entries}
-      {:error, reason} ->
+      {:error, %HTTPoison.Error{reason: reason}} ->
         {:error, reason}
     end
   end
