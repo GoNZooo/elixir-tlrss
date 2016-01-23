@@ -10,6 +10,7 @@ defmodule TLRSS.FeedReader do
   """
   alias TLRSS.FeedReader.RSS
   alias TLRSS.FeedReader.FeedSpec
+  alias TLRSS.ItemBucket
 
   require Logger
 
@@ -25,11 +26,16 @@ defmodule TLRSS.FeedReader do
   end
 
   @spec read_rss(FeedSpec.t, number) :: :ok
+  @doc"""
+  Reads a feed, responding to the return value of the RSS module.
+  If return value is good, will take the returned entries and pass them to
+  the ItemBucket module. Upon error, will log error to stdout.
+  """
   def read_rss(init_feed, sleep_time \\ 300000) do
     case RSS.get_entries(init_feed) do
       {:entries, entries} ->
         items = Enum.map(entries, &RSS.entry_to_item/1)
-        TLRSS.ItemBucket.add_items(items)
+        ItemBucket.add_items(items)
       {:error, reason} ->
         Logger.error(reason)
     end
