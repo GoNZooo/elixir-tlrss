@@ -9,15 +9,22 @@ defmodule TLRSS.FeedReader do
   the state away from the same process that reads the feed.
   """
   alias TLRSS.FeedReader.RSS
+  alias TLRSS.FeedReader.FeedSpec
 
   require Logger
 
-  @spec start_link(String.t) :: {:ok, pid}
+  @spec start_link(FeedSpec.t) :: {:ok, pid}
+  @doc"""
+  Takes a FeedSpec.t for which feed should be read by the FeedReader.
+
+  The reading is done via a Task that will start read_rss/2 which will
+  then recurse in a given time interval to loop.
+  """
   def start_link(init_feed) do
     Task.start_link(__MODULE__, :read_rss, [init_feed])
   end
 
-  @spec read_rss(String.t, number) :: :ok
+  @spec read_rss(FeedSpec.t, number) :: :ok
   def read_rss(init_feed, sleep_time \\ 300000) do
     case RSS.get_entries(init_feed) do
       {:entries, entries} ->
