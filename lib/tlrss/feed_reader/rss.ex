@@ -10,6 +10,9 @@ defmodule TLRSS.FeedReader.RSS do
 
   Will return {:error, reason} upon error and {:entries, [entry]} upon
   success.
+
+  The error reason will be unpacked before returning it, meaning it can be
+  handled without consideration of %HTTPoison.Error{}.
   """
   def get_entries(rss_url \\ Application.get_env(:tlrss, :rss_url)) do
     response = HTTPoison.get(rss_url, [{"Accept-Encoding:", "utf-8"}])
