@@ -4,6 +4,20 @@ defmodule TLRSS.FeedReader.RSS do
   """
   alias TLRSS.Item
 
+  @spec try_parse_rss(binary) :: {:ok, FeederEx.Feed} | {:error, String.t}
+  defp try_parse_rss(data) do
+    result = try do
+               FeederEx.parse(data)
+             rescue
+               _ in BadMapError -> {:error, "Can't parse RSS: #{data}"}
+             end
+
+    case result do
+      {:ok, feed, _} -> {:ok, feed}
+      {:error, reason} -> {:error, reason}
+    end
+  end
+
   @spec get_entries(String.t) :: [FeederEx.Entry.t]
   @doc"""
   Fetches the specified RSS feed and returns all entries from it.
@@ -18,8 +32,13 @@ defmodule TLRSS.FeedReader.RSS do
     response = HTTPoison.get(rss_url, [{"Accept-Encoding:", "utf-8"}])
     case response do
       {:ok, %HTTPoison.Response{body: body}} ->
-        {:ok, feed, _} = FeederEx.parse(body)
-        {:entries, feed.entries}
+        parse_result = try_parse_rss(body)
+        case parse_result do
+          {:ok, feed} ->
+            {:entries, feed.entries}
+          {:error, reason} ->
+            {:error, reason}
+        end
       {:error, %HTTPoison.Error{reason: reason}} ->
         {:error, reason}
     end
