@@ -1,12 +1,7 @@
 defmodule TLRSS.FeedReader do
   @moduledoc"""
   Module that handles reading of feeds. A FeedReader is
-  a simple Task that will read and re-read a given RSS feed
-  in given intervals.
-
-  When items are received, the FeedReader sends them to the
-  ItemBucket module where they are stored, effectively keeping
-  the state away from the same process that reads the feed.
+  a simple Task that will read a given RSS feed.
   """
   alias TLRSS.FeedReader.RSS
   alias TLRSS.FeedReader.FeedSpec
@@ -28,19 +23,13 @@ defmodule TLRSS.FeedReader do
   @spec read_rss(FeedSpec.t, number) :: :ok
   @doc"""
   Reads a feed, responding to the return value of the RSS module.
-  If return value is good, will take the returned entries and pass them to
-  the ItemBucket module. Upon error, will log error to stdout.
   """
-  def read_rss(init_feed, sleep_time \\ 300000) do
+  def read_rss(init_feed) do
     case RSS.get_entries(init_feed) do
       {:entries, entries} ->
-        items = Enum.map(entries, &RSS.entry_to_item/1)
-        ItemBucket.add_items(items)
+        Enum.map(entries, &RSS.entry_to_item/1)
       {:error, reason} ->
         Logger.error(reason)
     end
-
-    :timer.sleep(sleep_time)
-    read_rss(init_feed)
   end
 end
