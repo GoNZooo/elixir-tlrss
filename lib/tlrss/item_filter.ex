@@ -19,7 +19,7 @@ defmodule TLRSS.ItemFilter do
 
   @spec filter([Item.t], pid) :: :ok
   def filter(items, pid \\ __MODULE__) do
-    GenServer.cast(pid, {:filter, items})
+    GenServer.call(pid, {:filter, items})
   end
 
   def get_filters(pid \\ __MODULE__) do
@@ -48,13 +48,9 @@ defmodule TLRSS.ItemFilter do
     {:ok, filters}
   end
 
-  def handle_cast({:filter, items}, filters) do
+  def handle_call({:filter, items}, _from, filters) do
     matches = Enum.filter(items, &(any_matches?(&1, filters)))
-
-    matches
-    |> Enum.each(&(TLRSS.Download.download(&1)))
-
-    {:noreply, filters}
+    {:reply, matches, filters}
   end
 
   def handle_cast({:set_filters, new_filters}, _filters) do
