@@ -3,7 +3,6 @@ defmodule TLRSS.FeedReader.Manager do
   Module that handles initial and subsequent adding of
   all new FeedReader processes to the FeedReader supervisor.
   """
-
   use GenServer
   alias TLRSS.FeedReader.FeedSpec
   alias TLRSS.FeedReader.Supervisor, as: ReaderSup
