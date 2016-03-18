@@ -19,6 +19,9 @@ defmodule TLRSS.FeedReader.Looper do
 
     entries = feeds |> Enum.each(&(ReaderSup.start_child(&1)))
     new_items = TLRSS.ItemBucket.add_items(entries)
+    matches = TLRSS.ItemFilter.filter(new_items)
+
+    matches |> Enum.each(&(TLRSS.Download.download(&1)))
 
     :timer.sleep(sleep_time)
     read_loop(manager, sleep_time)
