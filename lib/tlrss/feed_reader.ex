@@ -9,18 +9,15 @@ defmodule TLRSS.FeedReader do
 
   require Logger
 
-  @spec start_link(FeedSpec.t) :: {:ok, pid}
+  @spec start_link(FeedSpec.t) :: Task.t
   @doc"""
   Takes a FeedSpec.t for which feed should be read by the FeedReader.
-
-  The reading is done via a Task that will start read_rss/2 which will
-  then recurse in a given time interval to loop.
   """
   def start_link(init_feed) do
-    Task.start_link(__MODULE__, :read_rss, [init_feed])
+    Task.Supervisor.async_nolink(TLRSS.TaskSupervisor, __MODULE__, :read_rss, [init_feed])
   end
 
-  @spec read_rss(FeedSpec.t, number) :: :ok
+  @spec read_rss(FeedSpec.t) :: :ok
   @doc"""
   Reads a feed, responding to the return value of the RSS module.
   """
