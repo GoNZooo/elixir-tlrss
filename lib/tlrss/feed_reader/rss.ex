@@ -5,11 +5,6 @@ defmodule TLRSS.FeedReader.RSS do
   alias TLRSS.Item
 
   @spec try_parse_rss(binary) :: {:ok, FeederEx.Feed} | {:error, String.t}
-  @doc"""
-  This function was created because FeederEx doesn't actually return errors,
-  so you have to deal with exceptions instead. There is probably a better
-  solution lurking somewhere, but this is the one for now.
-  """
   defp try_parse_rss(data) do
     result = try do
                FeederEx.parse(data)
