@@ -14,12 +14,12 @@ defmodule TLRSS.FeedReader.Supervisor do
 
   @spec start_link([name: atom]) :: Supervisor.on_start()
   def start_link(opts \\ [name: __MODULE__]) do
-    Supervisor.start_link(__MODULE__, [], opts)
+    Task.Supervisor.start_link(opts)
   end
 
   @spec start_child(FeedSpec.t) :: Supervisor.Spec.on_start
   def start_child(feed_url) do
-    Supervisor.start_child(__MODULE__, [feed_url])
+    Task.Supervisor.start_child(__MODULE__, TLRSS.FeedReader, :read_rss, [feed_url])
   end
 
   ############
