@@ -53,6 +53,10 @@ defmodule TLRSS.ItemFilter do
     {:reply, matches, filters}
   end
 
+  def handle_call(:get_filters, _from, filters) do
+    {:reply, {:filters, filters}, filters}
+  end
+
   def handle_cast({:set_filters, new_filters}, _filters) do
     {:noreply, new_filters}
   end
@@ -61,7 +65,4 @@ defmodule TLRSS.ItemFilter do
     {:noreply, [new_filter | filters]}
   end
 
-  def handle_call(:get_filters, _from, filters) do
-    {:reply, {:filters, filters}, filters}
-  end
 end
