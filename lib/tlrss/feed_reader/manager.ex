@@ -43,8 +43,6 @@ defmodule TLRSS.FeedReader.Manager do
   ############
 
   def init(feeds) do
-    feeds
-    |> Enum.each(&(ReaderSup.start_child(&1)))
     {:ok, feeds}
   end
 
@@ -54,6 +52,6 @@ defmodule TLRSS.FeedReader.Manager do
   end
 
   def handle_call(:get_feeds, _from, feeds) do
-    {:reply, {:feeds, feeds}, feeds}
+    {:reply, feeds, feeds}
   end
 end
