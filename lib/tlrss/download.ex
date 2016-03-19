@@ -52,7 +52,7 @@ defmodule TLRSS.Download do
   end
 
   def handle_cast({:download, item}, state) do
-    dl = Task.Supervisor.async(TLRSS.DownloadSupervisor,
+    dl = Task.Supervisor.async(TLRSS.TaskSupervisor,
       fn -> download_file(item.link) end)
     {{:filename, filename}, {:data, data}} = Task.await(dl)
     write_file(filename, data)
