@@ -1,12 +1,16 @@
 defmodule TLRSS.FeedReader.Looper do
-  alias TLRSS.FeedReader.Supervisor, as: ReaderSup
+  @moduledoc"""
+  Drives the flow of the application. This was separated out of a chain of
+  forwarded results throughout the modules in order to keep them usable for
+  other uses. It's much like the Driver module that was originally a part of
+  the suite, but is instead a task that will run periodically.
+  """
   #######
   # API #
   #######
 
   def start_link(manager \\ TLRSS.FeedReader.Manager,
-                 sleep_time \\ 300_000,
-                 opts \\ [name: __MODULE__]) do
+                 sleep_time \\ 300_000) do
     Task.start_link(__MODULE__, :read_loop, [manager, sleep_time])
   end
 
