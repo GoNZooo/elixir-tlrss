@@ -14,7 +14,10 @@ defmodule TLRSS.FeedReader do
   Takes a FeedSpec.t for which feed should be read by the FeedReader.
   """
   def start_link(init_feed) do
-    Task.Supervisor.async_nolink(TLRSS.TaskSupervisor, __MODULE__, :read_rss, [init_feed])
+    Task.Supervisor.async_nolink(TLRSS.TaskSupervisor,
+                                 __MODULE__,
+                                 :read_rss,
+                                 [init_feed])
   end
 
   @spec read_rss(FeedSpec.t) :: :ok

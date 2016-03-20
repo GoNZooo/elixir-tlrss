@@ -15,7 +15,7 @@ defmodule TLRSS.ItemBucket do
     GenServer.start_link(__MODULE__, init_items, opts)
   end
 
-  @spec get_items(pid) :: [Item.t]
+  @spec items(pid) :: [Item.t]
   def get_items(pid \\ __MODULE__) do
     GenServer.call(pid, :get_items)
   end
@@ -50,8 +50,8 @@ defmodule TLRSS.ItemBucket do
     {:ok, Enum.into(init_items, %{}, fn i = %Item{} -> {i.name, i} end)}
   end
 
-  def handle_call(:get_items, _from, current_items) do
-    {:reply, {:items, current_items}, current_items}
+  def handle_call(:items, _from, current_items) do
+    {:reply, current_items, current_items}
   end
 
   def handle_call({:add_items, items_to_add}, _from, current_items) do
