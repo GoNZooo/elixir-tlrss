@@ -19,13 +19,12 @@ defmodule TLRSS.FeedReader.Looper do
   ############
 
   def read_loop(manager, sleep_time) do
-    feeds = TLRSS.FeedReader.Manager.get_feeds(manager)
-    entries = feeds
+    TLRSS.FeedReader.Manager.get_feeds(manager)
     |> Enum.map(&(TLRSS.FeedReader.start_link(&1)))
     |> Enum.flat_map(&(Task.await(&1)))
-    new_items = TLRSS.ItemBucket.add(entries)
-    matches = TLRSS.ItemFilter.filter(new_items)
-    matches |> Enum.each(&(TLRSS.Download.download(&1)))
+    |> TLRSS.ItemBucket.add()
+    |> TLRSS.ItemFilter.filter()
+    |> Enum.each(&(TLRSS.Download.download(&1)))
 
     :timer.sleep(sleep_time)
     read_loop(manager, sleep_time)
