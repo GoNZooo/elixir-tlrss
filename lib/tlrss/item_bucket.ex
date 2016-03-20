@@ -20,14 +20,14 @@ defmodule TLRSS.ItemBucket do
     GenServer.call(pid, :items)
   end
 
-  @spec add_items([Item.t], pid) :: :ok
-  def add_items(items_to_add, pid \\ __MODULE__) do
-    GenServer.call(pid, {:add_items, items_to_add})
+  @spec add([Item.t], pid) :: :ok
+  def add(items_to_add, pid \\ __MODULE__) do
+    GenServer.call(pid, {:add, items_to_add})
   end
 
-  @spec remove_items([Item.t], pid) :: :ok
-  def remove_items(items_to_remove, pid \\ __MODULE__) do
-    GenServer.cast(pid, {:remove_items, items_to_remove})
+  @spec remove([Item.t], pid) :: :ok
+  def remove(items_to_remove, pid \\ __MODULE__) do
+    GenServer.cast(pid, {:remove, items_to_remove})
   end
 
   ############
@@ -54,13 +54,13 @@ defmodule TLRSS.ItemBucket do
     {:reply, current_items, current_items}
   end
 
-  def handle_call({:add_items, items_to_add}, _from, current_items) do
+  def handle_call({:add, items_to_add}, _from, current_items) do
     new_items = _new_items(current_items, items_to_add)
     new_current_items = _add_items(current_items, items_to_add)
     {:reply, new_items, new_current_items}
   end
 
-  def handle_cast({:remove_items, items_to_remove}, current_items) do
+  def handle_cast({:remove, items_to_remove}, current_items) do
     {:noreply, _remove_items(current_items, items_to_remove)}
   end
 end
