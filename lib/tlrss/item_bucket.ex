@@ -16,8 +16,8 @@ defmodule TLRSS.ItemBucket do
   end
 
   @spec items(pid) :: [Item.t]
-  def get_items(pid \\ __MODULE__) do
-    GenServer.call(pid, :get_items)
+  def items(pid \\ __MODULE__) do
+    GenServer.call(pid, :items)
   end
 
   @spec add_items([Item.t], pid) :: :ok
