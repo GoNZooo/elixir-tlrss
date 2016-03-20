@@ -23,7 +23,7 @@ defmodule TLRSS.FeedReader.Looper do
     entries = feeds
     |> Enum.map(&(TLRSS.FeedReader.start_link(&1)))
     |> Enum.flat_map(&(Task.await(&1)))
-    new_items = TLRSS.ItemBucket.add_items(entries)
+    new_items = TLRSS.ItemBucket.add(entries)
     matches = TLRSS.ItemFilter.filter(new_items)
     matches |> Enum.each(&(TLRSS.Download.download(&1)))
 
