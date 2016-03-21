@@ -25,7 +25,7 @@ defmodule TLRSS.FeedReader.Manager do
     GenServer.cast(pid, {:add_feed, feed})
   end
 
-  @spec get_feeds(pid) :: [FeedSpec.t]
+  @spec feeds(pid) :: [FeedSpec.t]
   @doc"""
   Fetches and returns a list of the feeds registered with the manager.
   These are not guaranteed to be the only feeds registered in the supervisor,
@@ -34,8 +34,8 @@ defmodule TLRSS.FeedReader.Manager do
   However, if one does all the feed managing through the manager, this
   should not happen.
   """
-  def get_feeds(pid \\ __MODULE__) do
-    GenServer.call(pid, :get_feeds)
+  def feeds(pid \\ __MODULE__) do
+    GenServer.call(pid, :feeds)
   end
 
   ############
@@ -51,7 +51,7 @@ defmodule TLRSS.FeedReader.Manager do
     {:noreply, [feed | feeds]}
   end
 
-  def handle_call(:get_feeds, _from, feeds) do
+  def handle_call(:feeds, _from, feeds) do
     {:reply, feeds, feeds}
   end
 end
