@@ -9,11 +9,11 @@ defmodule TLRSS.FeedReader do
 
   require Logger
 
-  @spec start_link(FeedSpec.t) :: Task.t
+  @spec start_reader(FeedSpec.t) :: Task.t
   @doc"""
   Takes a FeedSpec.t for which feed should be read by the FeedReader.
   """
-  def start_link(init_feed) do
+  def start_reader(init_feed) do
     Task.Supervisor.async_nolink(TLRSS.TaskSupervisor,
                                  __MODULE__,
                                  :read_rss,
