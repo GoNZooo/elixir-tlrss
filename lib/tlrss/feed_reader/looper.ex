@@ -19,8 +19,8 @@ defmodule TLRSS.FeedReader.Looper do
   ############
 
   def read_loop(manager, sleep_time) do
-    TLRSS.FeedReader.Manager.get_feeds(manager)
-    |> Enum.map(&(TLRSS.FeedReader.start_link(&1)))
+    TLRSS.FeedReader.Manager.feeds(manager)
+    |> Enum.map(&(TLRSS.FeedReader.start_reader(&1)))
     |> Enum.flat_map(&(Task.await(&1)))
     |> TLRSS.ItemBucket.add()
     |> TLRSS.ItemFilter.filter()
