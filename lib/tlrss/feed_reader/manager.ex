@@ -17,12 +17,12 @@ defmodule TLRSS.FeedReader.Manager do
     GenServer.start_link(__MODULE__, feeds, opts)
   end
 
-  @spec add_feed(FeedSpec.t, pid) :: :ok
+  @spec add(FeedSpec.t, pid) :: :ok
   @doc"""
   Used to add a feed to the manager (and to the supervisor) at runtime.
   """
-  def add_feed(feed, pid \\ __MODULE__) do
-    GenServer.cast(pid, {:add_feed, feed})
+  def add(feed, pid \\ __MODULE__) do
+    GenServer.cast(pid, {:add, feed})
   end
 
   @spec feeds(pid) :: [FeedSpec.t]
@@ -46,7 +46,7 @@ defmodule TLRSS.FeedReader.Manager do
     {:ok, feeds}
   end
 
-  def handle_cast({:add_feed, feed}, feeds) do
+  def handle_cast({:add, feed}, feeds) do
     ReaderSup.start_child(feed)
     {:noreply, [feed | feeds]}
   end
