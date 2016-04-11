@@ -5,6 +5,9 @@ defmodule TLRSS.FeedReader.Looper do
   other uses. It's much like the Driver module that was originally a part of
   the suite, but is instead a task that will run periodically.
   """
+
+  require Logger
+
   #######
   # API #
   #######
@@ -18,13 +21,28 @@ defmodule TLRSS.FeedReader.Looper do
   # Internal #
   ############
 
+  defp _handle_reads(reads) do
+    reads
+    |> Enum.reduce([],
+      fn task, all_items ->
+        case Task.yield(task) do
+          {:ok, items} ->
+            [items | all_items]
+          {:error, reason} ->
+            Logger.info("Error: #{reason}")
+            all_items
+        end
+      end)
+  end
+
   def read_loop(manager, sleep_time) do
-    TLRSS.FeedReader.Manager.feeds(manager)
-    |> Enum.map(&(TLRSS.FeedReader.start_reader(&1)))
-    |> Enum.flat_map(&(Task.await(&1, 60_000)))
+    items = TLRSS.FeedReader.Manager.feeds(manager)
+    |> Enum.map(&TLRSS.FeedReader.start_reader(&1))
+    |> _handle_reads()
+    |> List.flatten()
     |> TLRSS.ItemBucket.add()
     |> TLRSS.ItemFilter.filter()
-    |> Enum.each(&(TLRSS.Download.download(&1)))
+    |> Enum.each(&TLRSS.Download.download(&1))
 
     :timer.sleep(sleep_time)
     read_loop(manager, sleep_time)
