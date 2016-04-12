@@ -1,8 +1,23 @@
-defmodule TLRSS.FeedReader.RSS do
+defmodule TLRSS.RSS do
   @moduledoc"""
   Handles the retrieval and minimal parsing of RSS feeds, using FeederEx.
   """
+  alias TLRSS.FeedSpec
   alias TLRSS.Item
+  require Logger
+
+  @spec read_rss(FeedSpec.t) :: :ok
+  @doc"""
+  Reads a feed, responding to the return value of the RSS module.
+  """
+  def read_rss(feed) do
+    case get_entries(feed) do
+      {:entries, entries} ->
+        Enum.map(entries, &entry_to_item/1)
+      {:error, reason} ->
+        Logger.error(reason)
+    end
+  end
 
   @spec try_parse_rss(binary) :: {:ok, FeederEx.Feed} | {:error, String.t}
   defp try_parse_rss(data) do
@@ -29,7 +44,7 @@ defmodule TLRSS.FeedReader.RSS do
   The error reason will be unpacked before returning it, meaning it can be
   handled without consideration of %HTTPoison.Error{}.
   """
-  def get_entries(rss_url \\ Application.get_env(:tlrss, :rss_url)) do
+  defp get_entries(rss_url \\ Application.get_env(:tlrss, :rss_url)) do
     response = HTTPoison.get(rss_url, [{"Accept-Encoding:", "utf-8"}])
     case response do
       {:ok, %HTTPoison.Response{body: body}} ->
@@ -47,7 +62,8 @@ defmodule TLRSS.FeedReader.RSS do
 
   @spec entry_to_item(FeederEx.Entry.t) :: Item.t
   @doc"Converts a %FeederEx.Entry{} to an %Item{}"
-  def entry_to_item(%FeederEx.Entry{title: name, id: id, link: link}) do
+  defp entry_to_item(%FeederEx.Entry{title: name, id: id, link: link}) do
     %Item{name: name, id: id, link: link}
   end
+
 end
