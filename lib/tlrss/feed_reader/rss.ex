@@ -9,7 +9,8 @@ defmodule TLRSS.FeedReader.RSS do
     result = try do
                FeederEx.parse(data)
              rescue
-               _ in BadMapError -> {:error, "Can't parse RSS: #{data}"}
+               _ in BadMapError -> {:error,
+                                   "Can't parse RSS (possible non-RSS data)"}
              end
 
     case result do
