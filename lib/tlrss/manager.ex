@@ -1,11 +1,11 @@
-defmodule TLRSS.FeedReader.Manager do
+defmodule TLRSS.Manager do
   @moduledoc"""
   Module that handles initial and subsequent adding of
   all new FeedReader processes to the FeedReader supervisor.
   """
   use GenServer
-  alias TLRSS.FeedReader.FeedSpec
-  alias TLRSS.FeedReader.Supervisor, as: ReaderSup
+  alias TLRSS.FeedSpec
+  require Logger
 
   #######
   # API #
@@ -43,12 +43,10 @@ defmodule TLRSS.FeedReader.Manager do
   ############
 
   def init(feeds) do
-    {:ok, feeds}
-  end
+    feeds
+    |> Enum.each(&TLRSS.Looper.start_looper(&1))
 
-  def handle_cast({:add, feed}, feeds) do
-    ReaderSup.start_child(feed)
-    {:noreply, [feed | feeds]}
+    {:ok, feeds}
   end
 
   def handle_call(:feeds, _from, feeds) do
