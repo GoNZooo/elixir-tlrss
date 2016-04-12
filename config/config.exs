@@ -29,4 +29,6 @@ use Mix.Config
 #
 #     import_config "#{Mix.env}.exs"
 
+if Mix.env == :prod, do: config :logger, level: :info
+
 import_config "rss_settings.exs"
